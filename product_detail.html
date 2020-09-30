@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+
+<link href="/css/reset.css" th:href="@{/css/reset.css}" rel="stylesheet" />
+<link href="/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+
+<title>Mushrooms 商品詳細</title>
+<script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+
+$(() => {
+	//cartButtonクラスの指定と、クリックイベント
+	$('.cartButton').on('click', () => {
+		//name=productCountをscript内でproductCountに改めて代入
+		let productCount = $('#productCount').val();
+		
+		if(productCount == 0){
+			alert("個数が0です。");
+			return;
+		}
+		
+		//カートコントローラーに送る
+		$('form').attr('action', '/mushrooms/cart/add');
+		$('form').submit();
+	});
+});
+
+</script>
+</head>
+<body>
+
+<header th:insert="fragments/page_header::pageHeader"></header>
+
+<main>
+	<div class="container">
+		<table class="top">
+		<caption><label th:text="${product.productName}"></label> (<label th:text="${product.productNameKana}"></label>)</caption>
+			<tr>
+				<th>画像</th><th>価格</th><th>発売元</th><th>発売年月日</th>
+			</tr>
+			<tr>
+				<td class="imageDetail">
+					<img class="itemImageDetail" alt=""  th:src="@{{imagePath} (imagePath=${product.imageFullPath})}"/> 
+				</td>
+				<td class="number" th:text="${product.price} + '円'" />
+				<td th:text="${product.releaseCompany}" />
+				<td th:text="${product.releaseDate}" />
+			</tr>
+		</table>
+			<label id="description">商品説明</label>
+			<textarea cols="75" rows="5" readonly th:text="${product.productDescription}">	</textarea>
+			<hr />
+		<form>
+			<div class="buttonArea">
+				<label>購入個数</label>
+				
+				<input type="number" id="productCount" class="count number" name="productCount" value="0" min="0" step="1"/> 
+				<input type="hidden" name="productId" th:value="${product.id}"/>
+				<button class="cartButton">カートに追加</button>
+			</div>
+		</form>
+	</div>
+
+</main>
+
+</body>
+</html>
